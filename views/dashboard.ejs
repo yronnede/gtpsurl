@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GTPS Account</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        @keyframes borderRGB {
+            0% { border-color: #00ff00; }
+            25% { border-color: #00ffff; }
+            50% { border-color: #0000ff; }
+            75% { border-color: #8000ff; }
+            100% { border-color: #00ff00; }
+        }
+
+        @keyframes fadeInScale {
+            0% {
+                opacity: 0;
+                transform: scale(0.95) translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        @keyframes buttonPush {
+            0% { transform: scale(1); }
+            40% { transform: scale(0.97); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes titleFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes inputFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideIn {
+            0% {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            10% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            90% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        @keyframes errorBorderRGB {
+            0% { border-color: #ff0000; }
+            25% { border-color: #ff3333; }
+            50% { border-color: #ff0000; }
+            75% { border-color: #cc0000; }
+            100% { border-color: #ff0000; }
+        }
+
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+
+        .notification {
+            background-color: rgba(17, 17, 17, 0.95);
+            color: #ffffff;
+            padding: 1.5rem;
+            border-radius: 35px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 12px rgba(255, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            max-width: 300px;
+            border: 3px solid;
+            animation: 
+                errorBorderRGB 5s linear infinite,
+                slideIn 4s ease-in-out forwards;
+            backdrop-filter: blur(5px);
+        }
+
+        .notification i {
+            margin-right: 10px;
+            color: #ff0000;
+            font-size: 1.2rem;
+        }
+
+        .notification span {
+            color: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: transparent !important;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            background-color: rgba(17, 17, 17, 0.95);
+            padding: 2rem;
+            border-radius: 35px;
+            width: 100%;
+            max-width: 380px;
+            position: relative;
+            border: 3px solid;
+            animation: 
+                borderRGB 5s linear infinite,
+                fadeInScale 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            opacity: 0;
+            backdrop-filter: blur(5px);
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        .header .title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #FFE600;
+            text-align: center;
+            animation: titleFadeIn 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.3s backwards;
+        }
+        .form-group {
+            margin-bottom: 1.2rem;
+            animation: inputFadeIn 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+            opacity: 0;
+        }
+        .form-group:nth-of-type(1) {
+            animation-delay: 0.5s;
+        }
+        .form-group:nth-of-type(2) {
+            animation-delay: 0.7s;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #808080;
+            font-size: 0.9rem;
+            transform: translateY(0);
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            background-color: rgba(30, 30, 30, 0.95);
+            color: #ffffff;
+            font-size: 0.9rem;
+            box-sizing: border-box;
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .form-group input:focus {
+            outline: none;
+            background-color: rgba(42, 42, 42, 0.95);
+            border-color: #FFE600;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 230, 0, 0.1);
+        }
+        .form-group input:focus + label {
+            color: #FFE600;
+            transform: translateY(-2px);
+        }
+        .button {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            box-sizing: border-box;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            animation: fadeInScale 0.6s cubic-bezier(0.23, 1, 0.32, 1) 0.9s forwards;
+        }
+        .button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s cubic-bezier(0.23, 1, 0.32, 1), 
+                      height 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            z-index: 1;
+        }
+        .button:hover::before {
+            width: 300%;
+            height: 300%;
+        }
+        .button span {
+            position: relative;
+            z-index: 2;
+        }
+        .button:active {
+            animation: buttonPush 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .login-button {
+            background-color: rgba(255, 230, 0, 0.95);
+            color: #000000;
+            margin-top: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .login-button:hover {
+            background-color: rgba(255, 215, 0, 0.95);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 230, 0, 0.3);
+        }
+        .hidden {
+            display: none;
+        }
+        #errorDiv {
+            background-color: rgba(255, 0, 0, 0.15);
+            border: 1px solid #ff0000;
+            color: #ff0000;
+            padding: 10px;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            display: none;
+        }
+        #errorDiv.show {
+            display: block;
+            animation: fadeInScale 0.3s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #808080;
+            z-index: 2;
+        }
+        .password-container {
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <div class="notification-container" id="notificationContainer"></div>
+    <div class="container">
+        <div class="header">
+            <span class="title">Log Into your GTPS Account</span>
+        </div>
+        <div id="errorDiv" class="hidden">
+            <span id="errorMessage"></span>
+        </div>
+        <form id="loginForm" method="POST" action="/player/growid/login/validate">
+            <input name="_token" type="hidden" value="">
+            <div class="form-group">
+                <label for="growId">GTPSID</label>
+                <input type="text" id="loginGrowId" name="growId" placeholder="Enter your GTPSID" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="password-container">
+                    <input type="password" id="loginPassword" name="password" placeholder="Enter your password" required>
+                    <span id="toggleLogPassword" class="password-toggle">
+                        <i class="fas fa-eye"></i>
+                    </span>
+                </div>
+            </div>
+            <button type="submit" id="loginButton" class="button login-button">
+                <span>Login</span>
+            </button>
+        </form>
+    </div>
+
+    <script src="https://s3.eu-west-1.amazonaws.com/cdn.growtopiagame.com/website/resources/vendors/jquery/jquery-2.1.4.min.js"></script>
+    <script src="https://s3.eu-west-1.amazonaws.com/cdn.growtopiagame.com/website/resources/vendors/bootstrap/javascripts/bootstrap.min.js"></script>
+    
+    <script>
+        // Anti-click spam
+        let clicked = false;
+        $('a').click(function () {
+            if (clicked === false) {
+                clicked = true;
+                return true;
+            }
+            $(this).attr('onclick', 'return false;');
+        });
+
+        // Security measures
+        $(document).ready(function () {
+            // Prevent dev tools and keyboard shortcuts
+            document.onkeydown = e => {
+                if (e.key == 123) {
+                    e.preventDefault();
+                }
+                if (e.key == 'F12') {
+                    e.preventDefault();
+                }
+                if (e.ctrlKey && e.shiftKey && e.key == 'I') {
+                    e.preventDefault();
+                }
+                if (e.ctrlKey && e.key == 'I') {
+                    e.preventDefault();
+                }
+                if (e.ctrlKey && e.shiftKey && e.key == 'C') {
+                    e.preventDefault();
+                }
+                if (e.ctrlKey && e.shiftKey && e.key == 'J') {
+                    e.preventDefault();
+                }
+                if (e.ctrlKey && e.key == 'U') {
+                    e.preventDefault();
+                }
+            };
+
+            // Mobile scaling
+            var observer = new MutationObserver(function (mutations) {
+                mutations.forEach(function (mutation) {
+                    for (var i = 0; i < mutation.addedNodes.length; i++) {
+                        if (mutation.addedNodes[i].tagName == 'DIV') {
+                            var thediv = mutation.addedNodes[i];
+                            var sw = window.screen.width;
+                            if (sw < 667) {
+                                $(thediv).css({
+                                    transform: 'scale(0.75)',
+                                    'transform-origin': '0 0',
+                                    '-webkit-transform': 'scale(0.75)',
+                                    '-webkit-transform-origin': '0 0',
+                                    overflow: 'auto',
+                                });
+                            }
+                        }
+                    }
+                });
+            });
+            observer.observe(document.body, {
+                attributes: false,
+                childList: true,
+                characterData: false,
+            });
+        });
+
+        // Form handling and validation
+        document.addEventListener('DOMContentLoaded', function () {
+            if (localStorage.getItem('growId')) {
+                document.getElementById('growId').value = localStorage.getItem('growId');
+            }
+        });
+
+        function showNotification(message, type = 'error') {
+            const container = document.getElementById('notificationContainer');
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            
+            notification.innerHTML = `
+                <i class="fas fa-exclamation-circle"></i>
+                <span>${message}</span>
+            `;
+            
+            container.appendChild(notification);
+            
+            // Remove notification after animation ends
+            setTimeout(() => {
+                notification.remove();
+            }, 4000);
+        }
+
+        document.getElementById('loginButton').addEventListener('click', function (event) {
+        event.preventDefault();
+
+        const loginForm = document.getElementById('loginForm');
+        const growId = document.getElementById('loginGrowId').value;
+        const password = document.getElementById('loginPassword').value;
+
+        if (!growId || !password) {
+            showNotification('Username or Password is empty');
+            return;
+        } else {
+            const tokenString = `_token=&growId=${growId}&password=${password}`;
+            const encodedToken = btoa(tokenString);
+
+            document.querySelector('input[name="_token"]').value = encodedToken;
+            console.log("Encoded Token (Client):", encodedToken); // Tambahkan ini
+
+            loginForm.submit();
+            localStorage.setItem('growId', growId);
+        }
+    });
+
+        // Password toggle
+        document.getElementById('toggleLogPassword').addEventListener('click', function () {
+            const passwordField = document.getElementById('loginPassword');
+            const passwordFieldType = passwordField.getAttribute('type');
+            if (passwordFieldType === 'password') {
+                passwordField.setAttribute('type', 'text');
+                this.innerHTML = '<i class="fas fa-eye-slash"></i>';
+            } else {
+                passwordField.setAttribute('type', 'password');
+                this.innerHTML = '<i class="fas fa-eye"></i>';
+            }
+        });
+    </script>
+</body>
+</html> 

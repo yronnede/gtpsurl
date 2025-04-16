@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GTPS Account</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @keyframes borderRGB {
+            0% { border-color: #00ff00; }
+            25% { border-color: #00ffff; }
+            50% { border-color: #0000ff; }
+            75% { border-color: #8000ff; }
+            100% { border-color: #00ff00; }
+        }
+
+        @keyframes fadeInScale {
+            0% {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes buttonPush {
+            0% { transform: scale(1) translateY(-2px); }
+            50% { transform: scale(0.97) translateY(-1px); }
+            100% { transform: scale(1) translateY(-2px); }
+        }
+
+        @keyframes titleFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: transparent !important;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            background-color: rgba(17, 17, 17, 0.95);
+            padding: 2rem;
+            border-radius: 35px;
+            width: 100%;
+            max-width: 380px;
+            position: relative;
+            border: 3px solid;
+            animation: 
+                borderRGB 5s linear infinite,
+                fadeInScale 0.6s ease-out;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(5px);
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        .header .title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #FFE600;
+            text-align: center;
+            animation: titleFadeIn 0.8s ease-out 0.3s backwards;
+        }
+        .button {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-bottom: 1rem;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            box-sizing: border-box;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+        .button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1), 
+                      height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .button:hover::before {
+            width: 300%;
+            height: 300%;
+        }
+        .button:active {
+            animation: buttonPush 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .register-button {
+            background-color: rgba(0, 0, 0, 0.9);
+            color: #FFFFFF;
+            transform: translateY(20px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            animation: fadeInScale 0.5s ease-out 0.6s forwards;
+        }
+        .register-button:hover {
+            background-color: rgba(255, 215, 0, 0.95);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 230, 0, 0.3);
+        }
+        .login-button {
+            background-color: rgba(0, 0, 0, 0.9);
+            color: #FFFFFF;
+            margin-bottom: 0;
+            transform: translateY(20px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            animation: fadeInScale 0.5s ease-out 0.6s forwards;
+        }
+        .login-button:hover {
+            background-color: rgba(255, 215, 0, 0.95);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 230, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <span class="title">Select a method to login</span>
+        </div>
+        <a href="/player/register" class="button register-button">Register</a>
+        <a href="/player/login/login_dashboard" class="button login-button">Login</a>
+    </div>
+
+    <script>
+        let clicked = false;
+        $('a').click(function () {
+            if (clicked === false) {
+                clicked = true;
+                return true;
+            }
+            $(this).attr('onclick', 'return false;');
+        });
+
+        $(document).ready(function () {
+            // Prevent dev tools and keyboard shortcuts
+            document.onkeydown = e => {
+                if (e.key == 123) {
+                    e.preventDefault();
+                }
+                if (e.key == 'F12') {
+                    e.preventDefault();
+                }
+                if (e.ctrlKey && e.shiftKey && e.key == 'I') {
+                    e.preventDefault();
+                }
+                if (e.ctrlKey && e.key == 'I') {
+                    e.preventDefault();
+                }
+                if (e.ctrlKey && e.shiftKey && e.key == 'C') {
+                    e.preventDefault();
+                }
+                if (e.ctrlKey && e.shiftKey && e.key == 'J') {
+                    e.preventDefault();
+                }
+                if (e.ctrlKey && e.key == 'U') {
+                    e.preventDefault();
+                }
+            };
+        });
+        var observer = new MutationObserver(function (mutations) {
+                mutations.forEach(function (mutation) {
+                    for (var i = 0; i < mutation.addedNodes.length; i++) {
+                        if (mutation.addedNodes[i].tagName == 'DIV') {
+                            var thediv = mutation.addedNodes[i];
+                            var sw = window.screen.width;
+                            if (sw < 667) {
+                                $(thediv).css({
+                                    transform: 'scale(0.75)',
+                                    'transform-origin': '0 0',
+                                    '-webkit-transform': 'scale(0.75)',
+                                    '-webkit-transform-origin': '0 0',
+                                    overflow: 'auto',
+                                });
+                            }
+                        }
+                    }
+                });
+            });
+            observer.observe(document.body, {
+                attributes: false,
+                childList: true,
+                characterData: false,
+            });
+
+        document.getElementById('register-button').addEventListener('click', function (event) {
+        event.preventDefault();
+
+        const registerForm = document.getElementById('registerForm');
+            
+    });
+    </script>
+</body>
+</html>
