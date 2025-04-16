@@ -111,7 +111,7 @@ app.all('/player/growid/checktoken', (req, res) => {
 });
 
 app.get('/', function (req, res) {
-    res.send('Made by Xaaryn');
+    res.send('Made by mekusto');
 });
 
 app.listen(5000, function () {
